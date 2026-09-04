@@ -36,7 +36,7 @@ export const createServer = async (expressInstance: any) => {
 let cachedServer: any;
 
 export default async function handler(req: any, res: any) {
-  if (req.url === '/' || req.url === '') {
+  if (req.url === '/' || req.url === '' || req.url === '/api' || req.url === '/api/') {
     return res.status(200).json({
       status: 'ok',
       service: 'Bangla E-Learning API',
@@ -55,6 +55,7 @@ export default async function handler(req: any, res: any) {
     return res.status(500).json({
       error: 'Internal Server Error',
       message: err?.message || 'Server initialization failed',
+      stack: err?.stack || null,
     });
   }
 }
