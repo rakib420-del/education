@@ -6,10 +6,12 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
+          "prisma/**",
+          "dev.db",
+          "../prisma/**",
+          "../dev.db",
           "../../prisma/**",
-          "../../dev.db",
-          "../../node_modules/@prisma/client/**",
-          "../../node_modules/.prisma/client/**"
+          "../../dev.db"
         ]
       }
     }
