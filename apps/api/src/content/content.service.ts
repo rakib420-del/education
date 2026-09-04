@@ -26,31 +26,38 @@ export class ContentService {
       ];
     }
 
-    const [items, total] = await Promise.all([
-      this.prisma.contentItem.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
-        include: {
-          lessons: { orderBy: { orderIndex: 'asc' } },
-          chapters: { orderBy: { orderIndex: 'asc' } },
-          _count: {
-            select: {
-              lessons: true,
-              chapters: true,
-              orders: { where: { status: 'VERIFIED' } },
-              reviews: { where: { isApproved: true } },
+    let items: any[] = [];
+    let total = 0;
+
+    try {
+      [items, total] = await Promise.all([
+        this.prisma.contentItem.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+          include: {
+            lessons: { orderBy: { orderIndex: 'asc' } },
+            chapters: { orderBy: { orderIndex: 'asc' } },
+            _count: {
+              select: {
+                lessons: true,
+                chapters: true,
+                orders: { where: { status: 'VERIFIED' } },
+                reviews: { where: { isApproved: true } },
+              },
+            },
+            reviews: {
+              where: { isApproved: true },
+              select: { rating: true },
             },
           },
-          reviews: {
-            where: { isApproved: true },
-            select: { rating: true },
-          },
-        },
-      }),
-      this.prisma.contentItem.count({ where }),
-    ]);
+        }),
+        this.prisma.contentItem.count({ where }),
+      ]);
+    } catch (err) {
+      // Fallback for empty/uninitialized SQLite databases on serverless cold starts
+    }
 
     return {
       items: items.map((item) => this.mapContentItem(item)),
