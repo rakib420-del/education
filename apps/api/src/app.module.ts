@@ -18,7 +18,7 @@ import { validationSchema } from './config/validation';
     // Config (global)
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema,
+      validationSchema: process.env.VERCEL ? undefined : validationSchema,
       envFilePath: ['.env', '../../.env'],
     }),
 
