@@ -1,28 +1,37 @@
 let cachedServer: any;
-let initError: any = null;
 
 export default async function handler(req: any, res: any) {
-  try {
-    if (req.url === '/' || req.url === '' || req.url === '/api' || req.url === '/api/') {
-      return res.status(200).json({
-        status: 'ok',
-        service: 'Bangla E-Learning API',
-        message: 'API is running on Vercel Serverless',
-        endpoints: '/api/content',
-      });
-    }
+  if (req.url === '/' || req.url === '' || req.url === '/api' || req.url === '/api/') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'Bangla E-Learning API',
+      message: 'API is running on Vercel Serverless',
+      endpoints: '/api/content',
+    });
+  }
 
+  try {
     if (!cachedServer) {
-      const express = require('express');
-      const { NestFactory } = require('@nestjs/core');
-      const { ExpressAdapter } = require('@nestjs/platform-express');
-      const { ValidationPipe } = require('@nestjs/common');
-      const { AppModule } = require('../src/app.module');
+      let express, NestFactory, ExpressAdapter, ValidationPipe, AppModule;
+      try {
+        express = require('express');
+        NestFactory = require('@nestjs/core').NestFactory;
+        ExpressAdapter = require('@nestjs/platform-express').ExpressAdapter;
+        ValidationPipe = require('@nestjs/common').ValidationPipe;
+        AppModule = require('../src/app.module').AppModule;
+      } catch (importErr: any) {
+        return res.status(500).json({
+          error: 'Module Import Failed',
+          message: importErr?.message || String(importErr),
+          stack: importErr?.stack || null,
+        });
+      }
 
       const server = express();
       const app = await NestFactory.create(
         AppModule,
         new ExpressAdapter(server),
+        { logger: ['error', 'warn'] }
       );
 
       app.setGlobalPrefix('api');
