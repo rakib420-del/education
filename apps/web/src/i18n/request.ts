@@ -1,15 +1,20 @@
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
+import bnMessages from '../../messages/bn.json';
+import enMessages from '../../messages/en.json';
+
+const messagesMap: Record<string, any> = {
+  bn: bnMessages,
+  en: enMessages,
+};
 
 export default getRequestConfig(async () => {
-  // Read locale from cookie or default to Bangla
   const cookieStore = cookies();
   const locale = cookieStore.get('locale')?.value || 'bn';
-  const validLocales = ['bn', 'en'];
-  const resolvedLocale = validLocales.includes(locale) ? locale : 'bn';
+  const resolvedLocale = locale === 'en' ? 'en' : 'bn';
 
   return {
     locale: resolvedLocale,
-    messages: (await import(`../../messages/${resolvedLocale}.json`)).default,
+    messages: messagesMap[resolvedLocale] || bnMessages,
   };
 });
