@@ -36,8 +36,25 @@ export const createServer = async (expressInstance: any) => {
 let cachedServer: any;
 
 export default async function handler(req: any, res: any) {
-  if (!cachedServer) {
-    cachedServer = await createServer(server);
+  if (req.url === '/' || req.url === '') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'Bangla E-Learning API',
+      message: 'API is running on Vercel Serverless',
+      endpoints: '/api/content',
+    });
   }
-  return server(req, res);
+
+  try {
+    if (!cachedServer) {
+      cachedServer = await createServer(server);
+    }
+    return server(req, res);
+  } catch (err: any) {
+    console.error('Vercel Handler Error:', err);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err?.message || 'Server initialization failed',
+    });
+  }
 }

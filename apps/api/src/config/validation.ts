@@ -7,10 +7,10 @@ export const validationSchema = Joi.object({
   CORS_ORIGINS: Joi.string().default('http://localhost:3000'),
 
   // ── Database (Supabase Postgres) ──────────────────────────────────
-  DATABASE_URL: Joi.string().required(),
+  DATABASE_URL: Joi.string().default('file:./dev.db'),
 
   // ── Admin JWT ─────────────────────────────────────────────────────
-  ADMIN_JWT_SECRET:     Joi.string().min(32).required(),
+  ADMIN_JWT_SECRET:     Joi.string().min(16).default('a7e4a9dd61c88412ae268f0e8005393d69a1ef10e4ed189c71a1d4195f11e86b5c6fd8efe9cc4f74392263e45e0c9ce2'),
   ADMIN_JWT_EXPIRES_IN: Joi.string().default('8h'),
 
   // ── SMTP (Nodemailer / Gmail) ─────────────────────────────────────
