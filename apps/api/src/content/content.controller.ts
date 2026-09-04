@@ -15,10 +15,19 @@ import { AdminJwtGuard } from '../admin/guards/admin-jwt.guard';
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'List published content (courses, books, notes)' })
-  findAll(@Query() query: ContentQueryDto, @CurrentUser() user?: any) {
-    return this.contentService.findAll(query, user?.sub);
+  async findAll(@Query() query: ContentQueryDto, @CurrentUser() user?: any) {
+    try {
+      return await this.contentService.findAll(query, user?.sub);
+    } catch (err: any) {
+      return {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 12,
+        totalPages: 0,
+        error: err?.message || String(err),
+      };
+    }
   }
 
   @Get('affiliate')

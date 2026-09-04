@@ -35,6 +35,31 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     try {
       await this.$connect();
       this.logger.log('✅ Connected to database');
+      // Auto-initialize SQLite tables if running in serverless / tmp db environment
+      if (process.env.VERCEL) {
+        await this.$executeRawUnsafe(`
+          CREATE TABLE IF NOT EXISTS "content_items" (
+            "id" TEXT NOT NULL PRIMARY KEY,
+            "type" TEXT NOT NULL,
+            "title_bn" TEXT NOT NULL,
+            "title_en" TEXT,
+            "description_bn" TEXT,
+            "description_en" TEXT,
+            "slug" TEXT NOT NULL,
+            "category" TEXT NOT NULL DEFAULT 'OTHER',
+            "level" TEXT NOT NULL DEFAULT 'BEGINNER',
+            "price" REAL NOT NULL,
+            "discount_price" REAL,
+            "thumbnail_url" TEXT,
+            "preview_asset_url" TEXT,
+            "is_featured" BOOLEAN NOT NULL DEFAULT false,
+            "is_published" BOOLEAN NOT NULL DEFAULT false,
+            "created_by_admin_id" TEXT,
+            "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "updated_at" DATETIME NOT NULL
+          );
+        `);
+      }
     } catch (err) {
       this.logger.error('Database connection warning:', err);
     }
