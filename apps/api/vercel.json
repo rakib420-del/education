@@ -5,7 +5,7 @@
       "src": "api/index.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["../../prisma/**", "../../node_modules/@prisma/client/**", "../../packages/shared/**"]
+        "includeFiles": ["../../prisma/**", "../../node_modules/@prisma/client/**", "../../packages/shared/**", "../../node_modules/@elearning/shared/**"]
       }
     }
   ],
