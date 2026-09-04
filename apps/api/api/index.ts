@@ -62,6 +62,11 @@ export default async function handler(req: any, res: any) {
       }
     }
 
+    // Strip /api prefix if present because Nest app global prefix is also set to 'api'
+    if (req.url.startsWith('/api')) {
+      req.url = req.url.substring(4) || '/';
+    }
+
     return cachedServer(req, res);
   } catch (err: any) {
     console.error('Vercel Handler Crash:', err);
