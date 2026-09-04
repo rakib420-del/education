@@ -11,7 +11,7 @@ export class StorageService {
   private s3Client?: S3Client;
   private readonly provider: string;
   private readonly bucket: string;
-  private readonly localUploadDir = 'uploads';
+  private readonly localUploadDir = process.env.VERCEL ? '/tmp/uploads' : 'uploads';
 
   constructor(private readonly configService: ConfigService) {
     this.provider = configService.get<string>('STORAGE_PROVIDER', 'local');
