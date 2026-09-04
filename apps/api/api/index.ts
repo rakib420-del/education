@@ -1,59 +1,34 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module';
-import { ValidationPipe } from '@nestjs/common';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import express from 'express';
-
-const server = express();
-let isInitialized = false;
-
-const initServer = async () => {
-  const app = await NestFactory.create(
-    AppModule,
-    new ExpressAdapter(server),
-    { logger: ['error', 'warn'] }
-  );
-
-  app.setGlobalPrefix('api');
-  app.enableCors({
-    origin: '*',
-    credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-  });
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
-
-  await app.init();
-  isInitialized = true;
-};
-
 export default async function handler(req: any, res: any) {
-
+  if (req.url === '/' || req.url === '' || req.url === '/api' || req.url === '/api/') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'Bangla E-Learning API',
+      message: 'API is running on Vercel Serverless',
+      endpoints: '/api/content',
+    });
+  }
 
   try {
-    if (!isInitialized) {
-      try {
-        await initServer();
-      } catch (initErr: any) {
-        return res.status(500).json({
-          error: 'Serverless App Init Error',
-          message: initErr?.message || String(initErr),
-          stack: initErr?.stack || null,
-        });
-      }
-    }
-    return server(req, res);
+    const express = require('express');
+    const { NestFactory } = require('@nestjs/core');
+    const { ExpressAdapter } = require('@nestjs/platform-express');
+    const { AppModule } = require('../src/app.module');
+
+    const appServer = express();
+    const app = await NestFactory.create(
+      AppModule,
+      new ExpressAdapter(appServer),
+      { logger: ['error', 'warn'] }
+    );
+
+    app.setGlobalPrefix('api');
+    app.enableCors({ origin: '*', credentials: true });
+    await app.init();
+
+    return appServer(req, res);
   } catch (err: any) {
-    console.error('Vercel Handler Crash:', err);
     return res.status(500).json({
-      error: 'Internal Server Error',
+      error: 'Vercel Function Error',
       message: err?.message || String(err),
       stack: err?.stack || null,
     });
