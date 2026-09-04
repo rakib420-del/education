@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@elearning/shared": ["../../packages/shared/dist/index.d.ts"]
+      "@elearning/shared": ["../../packages/shared/src/index.ts"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
