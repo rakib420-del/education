@@ -11,10 +11,12 @@ import {
 import Cookies from 'js-cookie';
 import { apiClient } from '@/lib/api-client';
 
-interface User {
+export interface User {
   id: string;
   name?: string | null;
   email: string;
+  mobileNumber?: string | null;
+  phoneNumber?: string | null;
   createdAt?: string;
 }
 

@@ -72,7 +72,7 @@ export default function ProfilePage() {
               <input
                 type="text"
                 disabled
-                value={user?.mobileNumber || user?.phoneNumber || 'ফোন নম্বর সংযুক্ত নেই'}
+                value={(user as any)?.mobileNumber || (user as any)?.phoneNumber || 'ফোন নম্বর সংযুক্ত নেই'}
                 className="form-input pl-10 text-white font-mono cursor-not-allowed bg-black/40 border-[#30363d]"
               />
               <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#3fb950]" />

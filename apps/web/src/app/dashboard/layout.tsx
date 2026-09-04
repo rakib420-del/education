@@ -52,7 +52,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-            <p className="text-xs text-[#8b949e] font-mono truncate">{user?.mobileNumber || user?.phoneNumber || user?.email}</p>
+            <p className="text-xs text-[#8b949e] font-mono truncate">{(user as any)?.mobileNumber || (user as any)?.phoneNumber || user?.email}</p>
           </div>
         </div>
 
