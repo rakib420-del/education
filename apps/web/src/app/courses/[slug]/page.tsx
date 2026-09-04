@@ -263,9 +263,9 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
               <div className="mt-4 pt-4 border-t border-[#30363d]">
                 <p className="text-xs text-[#484f58] text-center mb-3">পেমেন্ট গ্রহণযোগ্য</p>
                 <div className="flex justify-center gap-2">
-                  {['bKash', 'Nagad', 'Rocket'].map((m) => (
+                  {['bKash', 'Nagad'].map((m) => (
                     <span key={m} className="text-xs font-bold px-2 py-1 rounded text-white"
-                      style={{ background: m === 'bKash' ? '#d82b8c' : m === 'Nagad' ? '#e2231a' : '#8c3494' }}>
+                      style={{ background: m === 'bKash' ? '#d82b8c' : '#e2231a' }}>
                       {m}
                     </span>
                   ))}
