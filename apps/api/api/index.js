@@ -28,22 +28,31 @@ async function handler(req, res) {
                     stack: importErr?.stack || null,
                 });
             }
-            const server = express();
-            const app = await NestFactory.create(AppModule, new ExpressAdapter(server), { logger: ['error', 'warn'] });
-            app.setGlobalPrefix('api');
-            app.enableCors({
-                origin: '*',
-                credentials: true,
-                methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-            });
-            app.useGlobalPipes(new ValidationPipe({
-                whitelist: true,
-                forbidNonWhitelisted: true,
-                transform: true,
-                transformOptions: { enableImplicitConversion: true },
-            }));
-            await app.init();
-            cachedServer = server;
+            try {
+                const server = express();
+                const app = await NestFactory.create(AppModule, new ExpressAdapter(server), { logger: ['error', 'warn'] });
+                app.setGlobalPrefix('api');
+                app.enableCors({
+                    origin: '*',
+                    credentials: true,
+                    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+                });
+                app.useGlobalPipes(new ValidationPipe({
+                    whitelist: true,
+                    forbidNonWhitelisted: true,
+                    transform: true,
+                    transformOptions: { enableImplicitConversion: true },
+                }));
+                await app.init();
+                cachedServer = server;
+            }
+            catch (nestErr) {
+                return res.status(500).json({
+                    error: 'Nest App Init Failed',
+                    message: nestErr?.message || String(nestErr),
+                    stack: nestErr?.stack || null,
+                });
+            }
         }
         return cachedServer(req, res);
     }
