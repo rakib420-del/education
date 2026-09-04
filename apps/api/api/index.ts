@@ -39,7 +39,15 @@ export default async function handler(req: any, res: any) {
 
   try {
     if (!isInitialized) {
-      await initServer();
+      try {
+        await initServer();
+      } catch (initErr: any) {
+        return res.status(500).json({
+          error: 'Serverless App Init Error',
+          message: initErr?.message || String(initErr),
+          stack: initErr?.stack || null,
+        });
+      }
     }
     return server(req, res);
   } catch (err: any) {
