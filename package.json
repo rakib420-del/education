@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "start": "npm run start --prefix=apps/api",
+    "start": "node apps/api/dist/main",
     "lint": "turbo lint",
     "test": "turbo test",
     "db:generate": "prisma generate --schema=./prisma/schema.prisma",
