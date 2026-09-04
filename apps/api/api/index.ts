@@ -35,6 +35,15 @@ const initServer = async () => {
 };
 
 export default async function handler(req: any, res: any) {
+  if (req.url === '/' || req.url === '' || req.url === '/api' || req.url === '/api/') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'Bangla E-Learning API',
+      message: 'NestJS API is running cleanly on Vercel Serverless',
+      endpoints: '/api/content',
+    });
+  }
+
   try {
     if (!isInitialized) {
       await initServer();
