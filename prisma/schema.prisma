@@ -1,0 +1,312 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ─────────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────────
+
+model User {
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  passwordHash       String   @map("password_hash")
+  name               String?
+  mobileNumber       String?  @map("mobile_number")
+  activeSessionToken String?  @map("active_session_token")
+  isBlocked          Boolean  @default(false) @map("is_blocked")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  otpCodes       OtpCode[]
+  orders         Order[]              @relation("UserOrders")
+  accessGrants   ContentAccessGrant[] @relation("UserAccessGrants")
+  watermarkLogs  WatermarkLog[]       @relation("UserWatermarkLogs")
+  lessonProgress LessonProgress[]     @relation("UserLessonProgress")
+  reviews        Review[]             @relation("UserReviews")
+  devices        UserDevice[]
+
+  @@map("users")
+}
+
+model UserDevice {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  deviceFingerprint String   @map("device_fingerprint")
+  userAgent         String?  @map("user_agent")
+  isBlocked         Boolean  @default(false) @map("is_blocked")
+  lastLoginAt       DateTime @default(now()) @map("last_login_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deviceFingerprint])
+  @@map("user_devices")
+}
+
+// ─────────────────────────────────────────────
+// OTP
+// ─────────────────────────────────────────────
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("otp_codes")
+}
+
+// ─────────────────────────────────────────────
+// CONTENT
+// ─────────────────────────────────────────────
+
+model ContentItem {
+  id               String   @id @default(cuid())
+  type             String   // COURSE, BOOK, NOTE
+  titleBn          String   @map("title_bn")
+  titleEn          String?  @map("title_en")
+  descriptionBn    String?  @map("description_bn")
+  descriptionEn    String?  @map("description_en")
+  slug             String   @unique
+  category         String   @default("OTHER") // ADMISSION, JOB_PREPARATION, etc.
+  level            String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  price            Float
+  discountPrice    Float?   @map("discount_price")
+  thumbnailUrl     String?  @map("thumbnail_url")
+  previewAssetUrl  String?  @map("preview_asset_url")
+  isFeatured       Boolean  @default(false) @map("is_featured")
+  isPublished      Boolean  @default(false) @map("is_published")
+  createdByAdminId String?  @map("created_by_admin_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  lessons       CourseLesson[]
+  chapters      BookChapter[]
+  orders        Order[]
+  accessGrants  ContentAccessGrant[]
+  watermarkLogs WatermarkLog[]
+  reviews       Review[]
+  admin         AdminUser? @relation(fields: [createdByAdminId], references: [id])
+
+  @@index([type, isPublished])
+  @@index([slug])
+  @@map("content_items")
+}
+
+model CourseLesson {
+  id              String   @id @default(cuid())
+  contentItemId   String   @map("content_item_id")
+  titleBn         String   @map("title_bn")
+  titleEn         String?  @map("title_en")
+  orderIndex      Int      @map("order_index")
+  videoAssetId    String?  @map("video_asset_id")
+  videoUrl        String?  @map("video_url")
+  durationSeconds Int?     @map("duration_seconds")
+  isPreview       Boolean  @default(false) @map("is_preview")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  contentItem    ContentItem      @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
+
+  @@index([contentItemId, orderIndex])
+  @@map("course_lessons")
+}
+
+model BookChapter {
+  id            String   @id @default(cuid())
+  contentItemId String   @map("content_item_id")
+  titleBn       String   @map("title_bn")
+  titleEn       String?  @map("title_en")
+  orderIndex    Int      @map("order_index")
+  pdfAssetKey   String?  @map("pdf_asset_key")
+  pageCount     Int?     @map("page_count")
+  isPreview     Boolean  @default(false) @map("is_preview")
+  previewPages  Int      @default(3) @map("preview_pages")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  contentItem ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@index([contentItemId, orderIndex])
+  @@map("book_chapters")
+}
+
+// ─────────────────────────────────────────────
+// AFFILIATE
+// ─────────────────────────────────────────────
+
+model AffiliateOffer {
+  id            String   @id @default(cuid())
+  titleBn       String   @map("title_bn")
+  titleEn       String?  @map("title_en")
+  descriptionBn String?  @map("description_bn")
+  externalUrl   String   @map("external_url")
+  thumbnailUrl  String?  @map("thumbnail_url")
+  isActive      Boolean  @default(true) @map("is_active")
+  clickCount    Int      @default(0) @map("click_count")
+  orderIndex    Int      @default(0) @map("order_index")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("affiliate_offers")
+}
+
+// ─────────────────────────────────────────────
+// ORDERS & ACCESS
+// ─────────────────────────────────────────────
+
+model Order {
+  id                String    @id @default(cuid())
+  userId            String    @map("user_id")
+  contentItemId     String    @map("content_item_id")
+  pricePaid         Float     @map("price_paid")
+  paymentMethod     String    @map("payment_method") // BKASH, NAGAD, ROCKET
+  transactionId     String    @map("transaction_id")
+  paymentProofUrl   String?   @map("payment_proof_url")
+  status            String    @default("PENDING") // PENDING, VERIFIED, REJECTED
+  adminNote         String?   @map("admin_note")
+  verifiedByAdminId String?   @map("verified_by_admin_id")
+  verifiedAt        DateTime? @map("verified_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user        User                @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  contentItem ContentItem         @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  admin       AdminUser?          @relation(fields: [verifiedByAdminId], references: [id])
+  accessGrant ContentAccessGrant?
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@map("orders")
+}
+
+model ContentAccessGrant {
+  id               String    @id @default(cuid())
+  userId           String    @map("user_id")
+  contentItemId    String    @map("content_item_id")
+  orderId          String?   @unique @map("order_id")
+  grantedByAdminId String?   @map("granted_by_admin_id")
+  status           String    @default("PENDING") // PENDING, ACTIVE, REVOKED
+  activatedAt      DateTime? @map("activated_at")
+  revokedAt        DateTime? @map("revoked_at")
+  revokeReason     String?   @map("revoke_reason")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user        User        @relation("UserAccessGrants", fields: [userId], references: [id], onDelete: Cascade)
+  contentItem ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  order       Order?      @relation(fields: [orderId], references: [id])
+  admin       AdminUser?  @relation(fields: [grantedByAdminId], references: [id])
+
+  @@unique([userId, contentItemId])
+  @@index([userId, status])
+  @@map("content_access_grants")
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS TRACKING
+// ─────────────────────────────────────────────
+
+model LessonProgress {
+  id             String    @id @default(cuid())
+  userId         String    @map("user_id")
+  lessonId       String    @map("lesson_id")
+  watchedSeconds Int       @default(0) @map("watched_seconds")
+  isCompleted    Boolean   @default(false) @map("is_completed")
+  completedAt    DateTime? @map("completed_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user   User         @relation("UserLessonProgress", fields: [userId], references: [id], onDelete: Cascade)
+  lesson CourseLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+// ─────────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────────
+
+model Review {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  contentItemId String   @map("content_item_id")
+  rating        Int
+  commentBn     String?  @map("comment_bn")
+  isApproved    Boolean  @default(false) @map("is_approved")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  user        User        @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade)
+  contentItem ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentItemId])
+  @@index([contentItemId, isApproved])
+  @@map("reviews")
+}
+
+// ─────────────────────────────────────────────
+// WATERMARK LOGS
+// ─────────────────────────────────────────────
+
+model WatermarkLog {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  contentItemId String   @map("content_item_id")
+  lessonId      String?  @map("lesson_id")
+  chapterId     String?  @map("chapter_id")
+  viewedAt      DateTime @default(now()) @map("viewed_at")
+  ipAddress     String   @map("ip_address")
+
+  user        User        @relation("UserWatermarkLogs", fields: [userId], references: [id], onDelete: Cascade)
+  contentItem ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@index([userId, contentItemId])
+  @@map("watermark_logs")
+}
+
+// ─────────────────────────────────────────────
+// ADMIN USERS
+// ─────────────────────────────────────────────
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         String    @default("MODERATOR") // SUPERADMIN, MODERATOR
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  lastLoginAt  DateTime? @map("last_login_at")
+
+  contentItems ContentItem[]
+  orders       Order[]
+  accessGrants ContentAccessGrant[]
+
+  @@map("admin_users")
+}
+
+// ─────────────────────────────────────────────
+// COUPONS
+// ─────────────────────────────────────────────
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  discountType  String    @default("PERCENT")
+  discountValue Float     @map("discount_value")
+  maxUses       Int?      @map("max_uses")
+  usedCount     Int       @default(0) @map("used_count")
+  expiresAt     DateTime? @map("expires_at")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("coupons")
+}

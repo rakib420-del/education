@@ -1,0 +1,147 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "books": "Books & Notes",
+    "affiliate": "Offers",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "home": {
+    "hero": {
+      "badge": "Bangladesh's Premier Online Learning Platform",
+      "title": "Build Your Dream Career",
+      "subtitle": "Prepare for admission tests, government jobs, and skill development with expert instructors",
+      "cta_courses": "Browse Courses",
+      "cta_books": "Books & Notes",
+      "stats_students": "Students",
+      "stats_courses": "Courses",
+      "stats_success": "Success Rate"
+    },
+    "featured_courses": "Featured Courses",
+    "featured_books": "Books & Notes",
+    "affiliate_offers": "Special Offers",
+    "testimonials": "Student Reviews",
+    "view_all": "View All"
+  },
+  "courses": {
+    "title": "All Courses",
+    "filter_category": "Category",
+    "filter_level": "Level",
+    "filter_all": "All",
+    "enroll": "Enroll Now",
+    "preview": "Preview",
+    "lessons": "lessons",
+    "students": "students",
+    "free_preview": "Free Preview",
+    "price": "Price",
+    "taka": "৳"
+  },
+  "books": {
+    "title": "Books & Notes",
+    "buy": "Buy Now",
+    "pages": "pages",
+    "chapters": "chapters"
+  },
+  "auth": {
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Start your learning journey today",
+      "name": "Full Name",
+      "phone": "Mobile Number",
+      "email": "Email (optional)",
+      "password": "Password",
+      "submit": "Create Account",
+      "have_account": "Already have an account?",
+      "login_link": "Login"
+    },
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome back",
+      "phone": "Mobile Number",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Login",
+      "no_account": "Don't have an account?",
+      "register_link": "Register"
+    },
+    "otp": {
+      "title": "Verify OTP",
+      "subtitle": "Enter the 6-digit code sent to your mobile",
+      "resend": "Resend",
+      "resend_in": "seconds to resend",
+      "submit": "Verify"
+    },
+    "forgot": {
+      "title": "Password Recovery",
+      "subtitle": "Enter your mobile number to receive an OTP",
+      "submit": "Send OTP"
+    },
+    "reset": {
+      "title": "Set New Password",
+      "new_password": "New Password",
+      "submit": "Change Password"
+    }
+  },
+  "checkout": {
+    "title": "Make Payment",
+    "instructions": "Payment Instructions",
+    "bkash_step1": "Open bKash app or USSD (*247#)",
+    "bkash_step2": "Select \"Send Money\"",
+    "bkash_step3": "Send to the number",
+    "bkash_step4": "Enter order number as Reference",
+    "nagad_step1": "Open Nagad app or USSD (*167#)",
+    "nagad_step2": "Select \"Send Money\"",
+    "nagad_step3": "Send to the number",
+    "transaction_id": "Transaction ID",
+    "upload_proof": "Upload Payment Screenshot",
+    "submit": "Submit Order",
+    "pending_message": "Your order has been received. Our team will activate your access within 24 hours after verification.",
+    "amount": "Payment Amount"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "my_courses": "My Courses",
+    "my_books": "My Books",
+    "orders": "Order History",
+    "profile": "Profile",
+    "device": "Device & Sessions",
+    "progress": "Progress",
+    "continue": "Continue",
+    "completed": "Completed",
+    "pending": "Pending",
+    "active": "Active",
+    "rejected": "Rejected"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search...",
+    "no_results": "No results found",
+    "currency": "৳",
+    "free": "Free",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "taka": "Taka"
+  },
+  "footer": {
+    "tagline": "Your Learning Companion",
+    "quick_links": "Quick Links",
+    "support": "Support",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "refund": "Refund Policy",
+    "contact": "Contact Us",
+    "copyright": "All Rights Reserved"
+  }
+}

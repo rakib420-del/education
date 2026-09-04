@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────
+   CSS CUSTOM PROPERTIES
+───────────────────────────────────────────── */
+:root {
+  --primary:       #0f3d5c;
+  --primary-light: #1c5a9e;
+  --accent:        #ff7a45;
+  --accent-dark:   #e8612a;
+  --surface:       #0d1117;
+  --surface-card:  #161b22;
+  --surface-hover: #21262d;
+  --border:        #30363d;
+  --text:          #e6edf3;
+  --text-muted:    #8b949e;
+  --text-faint:    #484f58;
+}
+
+/* ─────────────────────────────────────────────
+   BASE RESETS
+───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @apply font-bangla bg-surface text-[#e6edf3];
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* Bangla text gets slightly larger line height */
+[lang="bn"], .text-bn {
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ─────────────────────────────────────────────
+   COMPONENT CLASSES
+───────────────────────────────────────────── */
+@layer components {
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200;
+    background: linear-gradient(135deg, #ff7a45 0%, #e8612a 100%);
+    box-shadow: 0 4px 15px rgba(255, 122, 69, 0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(255, 122, 69, 0.4);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+  }
+  .btn-outline:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl overflow-hidden transition-all duration-300;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+  }
+  .card:hover {
+    border-color: rgba(255,122,69,0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(-3px);
+  }
+
+  .glass-card {
+    @apply rounded-2xl overflow-hidden;
+    background: rgba(22, 27, 34, 0.8);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+  }
+
+  /* Form elements */
+  .form-input {
+    @apply w-full px-4 py-3 rounded-xl text-[#e6edf3] transition-all duration-200 outline-none;
+    background: var(--surface-hover);
+    border: 1.5px solid var(--border);
+    font-family: inherit;
+  }
+  .form-input::placeholder { color: var(--text-faint); }
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255,122,69,0.15);
+  }
+  .form-input.error {
+    border-color: #f85149;
+    box-shadow: 0 0 0 3px rgba(248,81,73,0.15);
+  }
+
+  .form-label {
+    @apply block text-sm font-medium mb-2;
+    color: var(--text-muted);
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  .badge-accent {
+    background: rgba(255,122,69,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(255,122,69,0.3);
+  }
+  .badge-primary {
+    background: rgba(15,61,92,0.5);
+    color: #74a2d3;
+    border: 1px solid rgba(15,61,92,0.8);
+  }
+  .badge-success {
+    background: rgba(35,134,54,0.2);
+    color: #3fb950;
+    border: 1px solid rgba(35,134,54,0.3);
+  }
+  .badge-warning {
+    background: rgba(210,153,34,0.2);
+    color: #d29922;
+    border: 1px solid rgba(210,153,34,0.3);
+  }
+  .badge-error {
+    background: rgba(248,81,73,0.2);
+    color: #f85149;
+    border: 1px solid rgba(248,81,73,0.3);
+  }
+
+  /* Section layout */
+  .section {
+    @apply py-16 md:py-24;
+  }
+  .container-main {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold mb-2;
+  }
+  .section-subtitle {
+    @apply text-base md:text-lg mb-10;
+    color: var(--text-muted);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #ff7a45 0%, #ffb374 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Divider */
+  .divider {
+    @apply w-12 h-1 rounded-full mb-6;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+  }
+
+  /* Star rating */
+  .star { color: #d29922; }
+
+  /* OTP input group */
+  .otp-input {
+    @apply w-12 h-14 text-center text-2xl font-bold rounded-xl outline-none transition-all;
+    background: var(--surface-hover);
+    border: 2px solid var(--border);
+    color: var(--text);
+  }
+  .otp-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255,122,69,0.2);
+  }
+
+  /* Watermark overlay */
+  .watermark-overlay {
+    @apply absolute pointer-events-none select-none;
+    font-size: 11px;
+    color: rgba(255,255,255,0.18);
+    transform: rotate(-25deg);
+    white-space: nowrap;
+    z-index: 10;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  /* Sidebar nav */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200;
+    color: var(--text-muted);
+  }
+  .sidebar-link:hover {
+    @apply text-white;
+    background: var(--surface-hover);
+  }
+  .sidebar-link.active {
+    color: var(--accent);
+    background: rgba(255,122,69,0.1);
+    border: 1px solid rgba(255,122,69,0.2);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   UTILITY OVERRIDES
+───────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+
+  /* No select (for protected content) */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--surface-card) 25%,
+      var(--surface-hover) 50%,
+      var(--surface-card) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   VIDEO.JS CUSTOM THEME
+───────────────────────────────────────────── */
+.video-js .vjs-control-bar {
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+}
+.video-js .vjs-play-progress { background: var(--accent); }
+.video-js .vjs-volume-level { background: var(--accent); }
+.video-js .vjs-big-play-button {
+  background: rgba(255,122,69,0.85) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 64px !important;
+  margin-top: -32px !important;
+  margin-left: -32px !important;
+}
+
+/* ─────────────────────────────────────────────
+   PROTECTED CONTENT — disable text selection
+───────────────────────────────────────────── */
+.protected-content {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.protected-content img {
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────
+   PAYMENT METHOD TABS
+───────────────────────────────────────────── */
+.payment-tab {
+  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2;
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+}
+.payment-tab.active {
+  color: white;
+  border-color: transparent;
+}
+.payment-tab.bkash.active { background: #d82b8c; }
+.payment-tab.nagad.active { background: #e2231a; }
+
+/* ─────────────────────────────────────────────
+   ADMIN PANEL
+───────────────────────────────────────────── */
+.admin-stat-card {
+  @apply rounded-2xl p-6;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+}
+
+.status-badge {
+  @apply px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+.status-pending  { @apply badge badge-warning; }
+.status-verified { @apply badge badge-success; }
+.status-rejected { @apply badge badge-error; }
+.status-active   { @apply badge badge-success; }
+.status-revoked  { @apply badge badge-error; }
