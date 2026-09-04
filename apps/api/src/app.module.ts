@@ -13,7 +13,10 @@ import { StreamModule }   from './stream/stream.module';
 import { HealthModule }   from './health/health.module';
 import { validationSchema } from './config/validation';
 
+import { AppController } from './app.controller';
+
 @Module({
+  controllers: [AppController],
   imports: [
     // Config (global)
     ConfigModule.forRoot({
