@@ -5,6 +5,15 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
 const server = express();
+
+server.use((req: any, _res: any, next: any) => {
+  if (req.url && !req.url.startsWith('/api')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+    req.originalUrl = req.url;
+  }
+  next();
+});
+
 let isInitialized = false;
 
 const initServer = async () => {
@@ -39,10 +48,6 @@ export default async function handler(req: any, res: any) {
   try {
     if (!isInitialized) {
       await initServer();
-    }
-    if (req.url && !req.url.startsWith('/api')) {
-      req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
-      req.originalUrl = req.url;
     }
     return server(req, res);
   } catch (err: any) {
