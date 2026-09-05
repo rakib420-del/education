@@ -31,7 +31,14 @@ export class MailerService {
   }
 
   async sendOtp(to: string, code: string): Promise<void> {
-    const from = this.config.get<string>('SMTP_FROM', this.config.get('SMTP_USER'));
+    const user = this.config.get<string>('SMTP_USER', '');
+    const pass = this.config.get<string>('SMTP_PASS', '');
+    const from = this.config.get<string>('SMTP_FROM') || user || 'noreply@shikkha.com.bd';
+
+    if (!user || !pass) {
+      this.logger.warn(`[DEV] SMTP not configured. OTP for ${to}: ${code}`);
+      return;
+    }
 
     try {
       const info = await this.transporter.sendMail({
@@ -50,15 +57,14 @@ export class MailerService {
         `,
       });
       this.logger.log(`OTP sent to ${to}`);
-      this.logger.log(`[DEV] The OTP code is: ${code}`); // ALWAYS log for development debugging
+      this.logger.log(`[DEV] The OTP code is: ${code}`);
       
       const previewUrl = nodemailer.getTestMessageUrl(info);
       if (previewUrl) {
         this.logger.log(`[ETHEREAL] Preview URL: ${previewUrl}`);
       }
-    } catch (err) {
-      // In development, log the OTP to console so you can test without a real SMTP server
-      this.logger.warn(`Failed to send email to ${to}: ${err.message}`);
+    } catch (err: any) {
+      this.logger.warn(`Failed to send email to ${to}: ${err?.message}`);
       this.logger.warn(`[DEV] OTP for ${to}: ${code}`);
     }
   }
