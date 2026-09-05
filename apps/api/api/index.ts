@@ -39,6 +39,9 @@ export default async function handler(req: any, res: any) {
     if (!isInitialized) {
       await initServer();
     }
+    if (req.url && !req.url.startsWith('/api')) {
+      req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+    }
     return server(req, res);
   } catch (err: any) {
     return res.status(500).json({
