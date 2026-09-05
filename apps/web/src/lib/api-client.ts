@@ -1,17 +1,24 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes('localhost')) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return 'https://education-api-two.vercel.app/api';
+  }
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+};
 
 export const apiClient = axios.create({
-  baseURL: API_BASE,
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Request interceptor: attach bearer token ──
 apiClient.interceptors.request.use(
   (config) => {
+    config.baseURL = getBaseUrl();
     if (typeof window !== 'undefined') {
       const isApiAdmin = config.url?.includes('/admin');
       const isPageAdmin = window.location.pathname.startsWith('/admin');
