@@ -14,7 +14,7 @@ const initServer = async () => {
     { logger: ['error', 'warn'] }
   );
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', { exclude: ['', '/', 'api'] });
   app.enableCors({
     origin: '*',
     credentials: true,
@@ -35,16 +35,6 @@ const initServer = async () => {
 };
 
 export default async function handler(req: any, res: any) {
-  const url = req.url || '/';
-  if (url === '/' || url === '' || url === '/api' || url === '/api/') {
-    return res.status(200).json({
-      status: 'ok',
-      service: 'Bangla E-Learning API',
-      message: 'NestJS API is running cleanly on Vercel Serverless',
-      endpoints: '/api/content',
-    });
-  }
-
   try {
     if (!isInitialized) {
       await initServer();
