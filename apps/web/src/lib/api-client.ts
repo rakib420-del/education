@@ -6,7 +6,7 @@ const getBaseUrl = () => {
     return process.env.NEXT_PUBLIC_API_URL;
   }
   if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-    return 'https://education-api-two.vercel.app/api';
+    return 'https://education-api-two.vercel.app';
   }
   return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 };
