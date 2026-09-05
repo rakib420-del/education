@@ -326,3 +326,9 @@ ALTER TABLE "watermark_logs" ADD CONSTRAINT "watermark_logs_user_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "watermark_logs" ADD CONSTRAINT "watermark_logs_content_item_id_fkey" FOREIGN KEY ("content_item_id") REFERENCES "content_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Seed Initial SuperAdmin Account
+INSERT INTO "admin_users" ("id", "name", "email", "password_hash", "role", "is_active", "created_at")
+VALUES ('admin_super_01', 'Super Admin', 'admin@example.com', '$2a$12$wZERcxcE.tJ2fkQL/FuQdeHVtKCVdwhao2wc.iXhcWNmGS8JVvqiO', 'SUPERADMIN', true, CURRENT_TIMESTAMP)
+ON CONFLICT ("email") DO NOTHING;
+
