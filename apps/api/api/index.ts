@@ -14,7 +14,6 @@ const initServer = async () => {
     { logger: ['error', 'warn'] }
   );
 
-  app.setGlobalPrefix('api', { exclude: ['', '/', 'api'] });
   app.enableCors({
     origin: '*',
     credentials: true,
@@ -39,8 +38,8 @@ export default async function handler(req: any, res: any) {
     if (!isInitialized) {
       await initServer();
     }
-    if (req.url && !req.url.startsWith('/api')) {
-      req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+    if (req.url && req.url.startsWith('/api')) {
+      req.url = req.url.replace(/^\/api/, '') || '/';
       req.originalUrl = req.url;
       delete req._parsedUrl;
     }
