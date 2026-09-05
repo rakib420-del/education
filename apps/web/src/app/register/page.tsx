@@ -45,7 +45,8 @@ export default function RegisterPage() {
       toast.success('নিবন্ধন সফল! এখন লগইন করুন।');
       router.push('/login');
     } catch (err: any) {
-      const msg = err?.response?.data?.message || 'নিবন্ধন ব্যর্থ হয়েছে';
+      const rawMsg = err?.response?.data?.message;
+      const msg = Array.isArray(rawMsg) ? rawMsg.join(', ') : (rawMsg || err?.message || 'নিবন্ধন ব্যর্থ হয়েছে');
       toast.error(msg);
     } finally {
       setLoading(false);

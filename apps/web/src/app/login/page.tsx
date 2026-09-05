@@ -39,7 +39,8 @@ export default function LoginPage() {
       // Pass email so verify-otp page can pre-fill it
       router.push(`/verify-otp?email=${encodeURIComponent(data.email)}`);
     } catch (err: any) {
-      const msg = err?.response?.data?.message || 'লগইন ব্যর্থ হয়েছে';
+      const rawMsg = err?.response?.data?.message;
+      const msg = Array.isArray(rawMsg) ? rawMsg.join(', ') : (rawMsg || err?.message || 'লগইন ব্যর্থ হয়েছে');
       toast.error(msg);
     } finally {
       setLoading(false);
