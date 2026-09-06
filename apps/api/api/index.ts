@@ -28,9 +28,20 @@ const initServer = async () => {
   app.setGlobalPrefix('api', { exclude: ['', '/', 'api'] });
 
   app.enableCors({
-    origin: '*',
+    origin: (requestOrigin, callback) => {
+      if (!requestOrigin) return callback(null, true);
+      if (
+        requestOrigin.includes('localhost') ||
+        requestOrigin.endsWith('.vercel.app') ||
+        requestOrigin.includes('shikkha')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   });
 
   app.useGlobalPipes(

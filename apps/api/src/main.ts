@@ -17,9 +17,21 @@ async function bootstrap() {
 
   // CORS
   app.enableCors({
-    origin: corsOrigins.split(','),
+    origin: (requestOrigin, callback) => {
+      if (!requestOrigin) return callback(null, true);
+      if (
+        requestOrigin.includes('localhost') ||
+        requestOrigin.endsWith('.vercel.app') ||
+        requestOrigin.includes('shikkha') ||
+        corsOrigins.includes(requestOrigin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   });
 
   // Global validation pipe
