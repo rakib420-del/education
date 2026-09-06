@@ -9,9 +9,8 @@ import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter
 const server = express();
 
 server.use((req: any, _res: any, next: any) => {
-  if (req.url && !req.url.startsWith('/api')) {
-    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
-    req.originalUrl = req.url;
+  if (req.url && req.url.startsWith('/api')) {
+    req.url = req.url.replace(/^\/api/, '') || '/';
   }
   next();
 });
@@ -24,8 +23,6 @@ const initServer = async () => {
     new ExpressAdapter(server),
     { logger: ['error', 'warn'] }
   );
-
-  app.setGlobalPrefix('api', { exclude: ['', '/', 'api'] });
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
