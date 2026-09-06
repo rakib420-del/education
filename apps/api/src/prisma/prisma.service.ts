@@ -8,6 +8,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('db.afpatcubzjrlrdmluzeg.supabase.co')) {
+      process.env.DATABASE_URL = process.env.DATABASE_URL
+        .replace(
+          'postgres@db.afpatcubzjrlrdmluzeg.supabase.co:5432',
+          'postgres.afpatcubzjrlrdmluzeg@aws-1-ap-northeast-2.pooler.supabase.com:5432'
+        )
+        .replace(
+          'postgres@db.afpatcubzjrlrdmluzeg.supabase.co',
+          'postgres.afpatcubzjrlrdmluzeg@aws-1-ap-northeast-2.pooler.supabase.com:5432'
+        );
+    }
+
     if (process.env.VERCEL && (!process.env.DATABASE_URL || process.env.DATABASE_URL.startsWith('file:'))) {
       try {
         const tmpDbPath = '/tmp/dev.db';
