@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
+import { AllExceptionsFilter } from '../src/common/filters/all-exceptions.filter';
+
 const server = express();
 
 server.use((req: any, _res: any, next: any) => {
@@ -39,6 +41,8 @@ const initServer = async () => {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.init();
   isInitialized = true;
